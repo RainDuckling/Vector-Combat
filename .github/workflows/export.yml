@@ -1,0 +1,24 @@
+name: "自动打包发布"
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  export_game:
+    runs-on: ubuntu-latest
+    name: 导出游戏
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Godot 导出
+        uses: firebelley/godot-export@v5.2.1
+        with:
+          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_export_templates.tpz
+          relative_project_path: ./
+          archive_output: true
+          export_preset_name: Windows Desktop
