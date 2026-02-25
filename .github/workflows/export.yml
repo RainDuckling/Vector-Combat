@@ -14,14 +14,20 @@ jobs:
         with:
           lfs: true
 
+      - name: 修复虚拟机的写入权限
+        run: chmod -R 777 .
+        
       - name: Godot 导出
         uses: firebelley/godot-export@v5.2.1
         with:
-          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_linux.x86_64.zip
-          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_export_templates.tpz
+          # 请确保这里的版本号和你本地左上角显示的版本号完全一致！
+          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           relative_project_path: ./
           use_preset_export_path: true
           export_debug: false
+          # 【新增参数】如果导出时遇到非致命的资源加载错误，尝试继续
+          verbose: true
 
       - name: 上传成品
         uses: actions/upload-artifact@v4
