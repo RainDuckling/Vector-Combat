@@ -1,0 +1,6 @@
+# Godot-specific ignores
+.godot/
+*.translation
+node_modules/
+导出/
+*.exe
