@@ -16,18 +16,30 @@ jobs:
 
       - name: 修复虚拟机的写入权限
         run: chmod -R 777 .
-        
+
+      # ==========================
+      # 【核心新增】：给 Linux 服务器加装图标注入套件
+      # ==========================
+      - name: 准备 Windows 图标注入环境 (Wine & rcedit)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wine64
+          wget https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe
+
       - name: Godot 导出
         uses: firebelley/godot-export@v5.2.1
         with:
-          # 请确保这里的版本号和你本地左上角显示的版本号完全一致！
-          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
-          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
+          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_export_templates.tpz
           relative_project_path: ./
           use_preset_export_path: true
           export_debug: false
-          # 【新增参数】如果导出时遇到非致命的资源加载错误，尝试继续
           verbose: true
+          # ==========================
+          # 【核心新增】：把 Wine 和 rcedit 的路径传给 Godot 引擎
+          # ==========================
+          wine_path: /usr/bin/wine64
+          custom_editor_settings: export/windows/rcedit=./rcedit-x64.exe
 
       - name: 上传成品
         uses: actions/upload-artifact@v4
