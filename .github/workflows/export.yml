@@ -1,13 +1,18 @@
 name: "自动打包发布"
-on: 
+
+on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
 
 jobs:
   export_game:
     runs-on: ubuntu-latest
-    name: 导出游戏
+    name: 导出并发布游戏
+
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
@@ -27,8 +32,23 @@ jobs:
           export_debug: false
           verbose: true
 
-      - name: 上传成品
-        uses: actions/upload-artifact@v4
+      - name: 打包游戏
+        run: |
+          cd build
+          zip -r ../Vector-Combat-Windows.zip .
+
+      - name: 创建 GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: Vector-Combat-Windows
-          path: build/
+          name: Vector Combat ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          body: |
+            ## Vector Combat ${{ github.ref_name }}
+
+            自动构建版本
+
+            Commit:
+            ${{ github.sha }}
+          files: Vector-Combat-Windows.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

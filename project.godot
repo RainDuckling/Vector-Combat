@@ -17,7 +17,7 @@ config/icon="res://icon.ico"
 
 [autoload]
 
-Global="*res://global.gd"
+global="*res://src/global.gd"
 
 [input]
 
